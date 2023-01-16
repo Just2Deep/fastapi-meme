@@ -11,9 +11,8 @@ templates = Jinja2Templates(directory="templates")
 
 def get_meme(sr="wholesomememes"):
 
-    print("sr", sr)
-    url = "https://meme-api.com/gimme" + "/" + sr
-    print("url", url)
+    url = "https://meme-api.com/gimme/" + sr
+
     data = json.loads(requests.request("GET", url).text)
 
     # print(data)
