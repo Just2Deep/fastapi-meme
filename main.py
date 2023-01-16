@@ -9,10 +9,11 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
-def get_meme(sr="/wholesomememes"):
+def get_meme(sr="wholesomememes"):
 
     print("sr", sr)
-    url = "https://meme-api.com/gimme" + sr
+    url = "https://meme-api.com/gimme" + "/" + sr
+    print("url", url)
     data = json.loads(requests.request("GET", url).text)
 
     # print(data)
@@ -32,9 +33,19 @@ def home(request: Request):
     )
 
 
-@app.get("/meirl", response_class=HTMLResponse)
-def home(request: Request, sr: str = Form(...)):
+@app.post("/meirl", response_class=HTMLResponse)
+def me_irl(request: Request, sr: str = Form(...)):
+
     meme_pic, subreddit = get_meme(sr)
+
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "meme_pic": meme_pic, "subreddit": subreddit}
+    )
+
+
+@app.get("/meirl", response_class=HTMLResponse)
+def me_irl_get(request: Request):
+    meme_pic, subreddit = get_meme()
 
     return templates.TemplateResponse(
         "index.html", {"request": request, "meme_pic": meme_pic, "subreddit": subreddit}
